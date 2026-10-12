@@ -36,16 +36,16 @@ export function SettingsPage() {
   return (
     <div className="min-h-dvh">
       <ScreenHeader title="Settings" />
-      <div className="pb-safe mx-auto max-w-2xl space-y-8 px-4 pt-4 pb-12">
+      <div className="pb-safe mx-auto max-w-2xl space-y-9 px-5 pt-5 pb-12">
         <section className="space-y-2">
-          <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Appearance</h2>
+          <h2 className="px-1 text-[13px] font-semibold tracking-wide text-muted uppercase">Appearance</h2>
           <div className="grid grid-cols-3 gap-1 rounded-xl bg-surface-2 p-1">
             {themeOptions.map((o) => (
               <button
                 key={o.value}
                 type="button"
                 onClick={() => setPreference(o.value)}
-                className={`min-h-9 rounded-lg text-[14px] font-medium transition ${
+                className={`min-h-11 rounded-lg text-[14px] font-medium transition ${
                   preference === o.value ? 'bg-bg text-fg shadow-soft' : 'text-muted'
                 }`}
               >
@@ -58,8 +58,8 @@ export function SettingsPage() {
         <TagManager />
 
         <section className="space-y-2">
-          <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Account</h2>
-          <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-3">
+          <h2 className="px-1 text-[13px] font-semibold tracking-wide text-muted uppercase">Account</h2>
+          <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4">
             <span className="truncate text-[15px]">{accountLabel(user)}</span>
             <Button variant="danger" onClick={signOut}>
               Sign out
@@ -87,7 +87,7 @@ function RecoveryEmail({ user }: { user: User }) {
   const [notice, setNotice] = useState<string | null>(null)
 
   const inputClass =
-    'min-h-11 w-full rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong'
+    'min-h-12 w-full rounded-xl border border-border bg-bg px-4 outline-none focus:border-accent-strong'
 
   const save = async () => {
     setError(null)
@@ -116,8 +116,8 @@ function RecoveryEmail({ user }: { user: User }) {
 
   return (
     <section className="space-y-2">
-      <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Recovery email</h2>
-      <div className="space-y-3 rounded-2xl border border-border bg-surface p-3">
+      <h2 className="px-1 text-[13px] font-semibold tracking-wide text-muted uppercase">Recovery email</h2>
+      <div className="space-y-4 rounded-2xl border border-border bg-surface p-4">
         {!editing ? (
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
@@ -189,11 +189,11 @@ function TagManager() {
 
   return (
     <section className="space-y-2">
-      <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Tags</h2>
+      <h2 className="px-1 text-[13px] font-semibold tracking-wide text-muted uppercase">Tags</h2>
       <div className="overflow-hidden rounded-2xl border border-border bg-surface">
         {isLoading && <CenteredSpinner />}
         {tags?.map((tag) => <TagRow key={tag.id} tag={tag} />)}
-        <div className="flex gap-2 p-3">
+        <div className="flex gap-2 p-4">
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -201,13 +201,13 @@ function TagManager() {
             placeholder="Add a tag"
             maxLength={50}
             enterKeyHint="done"
-            className="min-h-11 flex-1 rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong"
+            className="min-h-12 flex-1 rounded-xl border border-border bg-bg px-4 outline-none focus:border-accent-strong"
           />
           <button
             type="button"
             onClick={add}
             disabled={!draft.trim() || createTag.isPending}
-            className="flex size-11 items-center justify-center rounded-xl bg-surface-2 text-accent-strong disabled:opacity-40"
+            className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-accent-strong disabled:opacity-40"
             aria-label="Add tag"
           >
             {createTag.isPending ? <Spinner /> : <PlusIcon />}
@@ -242,7 +242,7 @@ function TagRow({ tag }: { tag: Tag }) {
 
   return (
     <div className="border-b border-border">
-      <div className="flex min-h-14 items-center gap-1 px-3">
+      <div className="flex min-h-14 items-center gap-1 px-4">
         {editing ? (
           <>
             <input

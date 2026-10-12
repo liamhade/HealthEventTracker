@@ -6,6 +6,9 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './hooks/auth'
 import { ThemeProvider } from './hooks/theme'
+import { installIosKeyboardFix } from './lib/iosKeyboard'
+
+installIosKeyboardFix()
 
 const queryClient = new QueryClient({
   defaultOptions: {

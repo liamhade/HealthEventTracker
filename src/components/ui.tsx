@@ -19,7 +19,7 @@ export function Button({
   return (
     <button
       type="button"
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-medium transition disabled:opacity-50 ${variantClasses[variant]} ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-[15px] font-medium transition disabled:opacity-50 ${variantClasses[variant]} ${className}`}
       {...props}
     />
   )
@@ -55,7 +55,7 @@ export function ScreenHeader({ title, right }: { title?: string; right?: ReactNo
   const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate('/'))
   return (
     <header className="pt-safe sticky top-0 z-20 border-b border-border bg-bg/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-2xl items-center gap-2 px-2">
+      <div className="mx-auto flex min-h-16 max-w-2xl items-center gap-2 px-3 py-1.5">
         <button
           type="button"
           onClick={goBack}
@@ -80,12 +80,12 @@ export function TagChip({
   selected?: boolean
   onClick?: () => void
 }) {
-  const classes = `inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1 text-[13px] font-medium transition ${
+  const classes = `inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition ${
     selected ? 'bg-accent text-on-accent' : 'bg-surface-2 text-muted'
   }`
   if (!onClick) return <span className={classes}>{name}</span>
   return (
-    <button type="button" onClick={onClick} className={`${classes} min-h-8`} aria-pressed={selected}>
+    <button type="button" onClick={onClick} className={`${classes} min-h-9`} aria-pressed={selected}>
       {name}
     </button>
   )

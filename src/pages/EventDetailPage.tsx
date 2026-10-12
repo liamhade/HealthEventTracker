@@ -53,8 +53,8 @@ export function EventDetailPage() {
           </>
         }
       />
-      <article className="pb-safe mx-auto max-w-2xl space-y-5 px-4 pt-4 pb-12">
-        <header className="space-y-1">
+      <article className="pb-safe mx-auto max-w-2xl space-y-6 px-5 pt-5 pb-12">
+        <header className="space-y-1.5">
           <h1 className="text-[26px] leading-tight font-bold">{event.title}</h1>
           <p className="text-[15px] text-muted">{formatEventDateTime(event.start_time, event.end_time)}</p>
           {event.end_time === null && <p className="text-[13px] text-muted">Point in time</p>}

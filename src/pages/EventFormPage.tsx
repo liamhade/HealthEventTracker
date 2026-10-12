@@ -33,15 +33,15 @@ function NotFound() {
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <section className="space-y-2">
-      <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">{label}</h2>
+    <section className="space-y-2.5">
+      <h2 className="px-1 text-[13px] font-semibold tracking-wide text-muted uppercase">{label}</h2>
       {children}
     </section>
   )
 }
 
 const inputClass =
-  'w-full min-h-11 rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong'
+  'w-full min-w-0 min-h-12 rounded-xl border border-border bg-bg px-4 outline-none focus:border-accent-strong'
 
 function EventForm({ existing, startValue }: { existing?: HealthEvent; startValue?: string }) {
   const navigate = useNavigate()
@@ -99,12 +99,12 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
       <ScreenHeader
         title={existing ? 'Edit event' : 'New event'}
         right={
-          <Button onClick={() => onSubmit()} disabled={save.isPending} className="min-h-9 px-4">
+          <Button onClick={() => onSubmit()} disabled={save.isPending} className="min-h-10 px-4">
             {save.isPending ? <Spinner /> : 'Save'}
           </Button>
         }
       />
-      <form onSubmit={onSubmit} noValidate className="pb-safe mx-auto max-w-2xl space-y-6 px-4 pt-4 pb-12">
+      <form onSubmit={onSubmit} noValidate className="pb-safe mx-auto max-w-2xl space-y-8 px-5 pt-5 pb-12">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -116,9 +116,8 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
         />
 
         <Field label="When">
-          <div className="space-y-3 rounded-2xl border border-border bg-surface p-3">
-            <label className="flex items-center gap-3">
-              <span className="w-12 text-[15px] text-muted">{isSpan ? 'Start' : 'At'}</span>
+          <div className="space-y-4 rounded-2xl border border-border bg-surface p-4">
+            <TimeRow label={isSpan ? 'Start' : 'At'} onNow={() => setStart(toLocalInputValue(new Date()))}>
               <input
                 type="datetime-local"
                 value={start}
@@ -126,17 +125,9 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
                 className={inputClass}
                 required
               />
-              <button
-                type="button"
-                onClick={() => setStart(toLocalInputValue(new Date()))}
-                className="shrink-0 rounded-lg px-2 py-2 text-[14px] font-medium text-accent-strong"
-              >
-                Now
-              </button>
-            </label>
+            </TimeRow>
             {isSpan && (
-              <label className="flex items-center gap-3">
-                <span className="w-12 text-[15px] text-muted">End</span>
+              <TimeRow label="End" onNow={() => setEnd(toLocalInputValue(new Date()))}>
                 <input
                   type="datetime-local"
                   value={end}
@@ -144,16 +135,9 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
                   onChange={(e) => setEnd(e.target.value)}
                   className={inputClass}
                 />
-                <button
-                  type="button"
-                  onClick={() => setEnd(toLocalInputValue(new Date()))}
-                  className="shrink-0 rounded-lg px-2 py-2 text-[14px] font-medium text-accent-strong"
-                >
-                  Now
-                </button>
-              </label>
+              </TimeRow>
             )}
-            <label className="flex items-center justify-between border-t border-border pt-3">
+            <label className="flex min-h-11 items-center justify-between border-t border-border pt-4">
               <span className="text-[15px]">Has end time</span>
               <Toggle
                 checked={isSpan}
@@ -174,7 +158,7 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Notes, symptoms, details…"
             rows={4}
-            className="w-full resize-y rounded-xl border border-border bg-bg p-3 outline-none focus:border-accent-strong"
+            className="w-full resize-y rounded-xl border border-border bg-bg p-4 outline-none focus:border-accent-strong"
           />
           <ImagePicker value={images} onChange={setImages} />
         </Field>
@@ -190,6 +174,24 @@ function EventForm({ existing, startValue }: { existing?: HealthEvent; startValu
           {save.isPending ? <Spinner /> : existing ? 'Save changes' : 'Log event'}
         </Button>
       </form>
+    </div>
+  )
+}
+
+function TimeRow({ label, onNow, children }: { label: string; onNow: () => void; children: ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <span className="block text-[14px] text-muted">{label}</span>
+      <div className="flex items-center gap-2">
+        {children}
+        <button
+          type="button"
+          onClick={onNow}
+          className="min-h-12 shrink-0 rounded-xl px-3 text-[15px] font-medium text-accent-strong hover:bg-accent-soft"
+        >
+          Now
+        </button>
+      </div>
     </div>
   )
 }

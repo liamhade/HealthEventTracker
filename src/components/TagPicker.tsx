@@ -52,13 +52,13 @@ export function TagPicker({ value, onChange }: { value: string[]; onChange: (ids
           placeholder="New tag"
           maxLength={50}
           enterKeyHint="done"
-          className="min-h-11 flex-1 rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong"
+          className="min-h-12 flex-1 rounded-xl border border-border bg-bg px-4 outline-none focus:border-accent-strong"
         />
         <button
           type="button"
           onClick={() => add()}
           disabled={!draft.trim() || isLoading || createTag.isPending}
-          className="flex size-11 items-center justify-center rounded-xl bg-surface-2 text-accent-strong disabled:opacity-40"
+          className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-accent-strong disabled:opacity-40"
           aria-label="Add tag"
         >
           {createTag.isPending ? <Spinner /> : <PlusIcon />}

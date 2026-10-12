@@ -70,6 +70,25 @@ select {
   font-size: 16px;
 }
 
+/* Kill the double-tap zoom delay on tappables only. A global touch-action or user-select: none can stop iOS
+   home-screen apps from opening the keyboard, so form fields keep the native defaults. */
+a,
+button,
+label,
+[role='button'],
+[role='tab'],
+[role='switch'] {
+  touch-action: manipulation;
+}
+input,
+textarea,
+select,
+[contenteditable] {
+  touch-action: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 input[type='datetime-local'] {
   min-height: 2.75rem;
   -webkit-appearance: none;

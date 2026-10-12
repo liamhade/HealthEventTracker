@@ -15,7 +15,7 @@ const providerLabel = (p: string) => (p === 'github' ? 'GitHub' : p.charAt(0).to
 
 type Mode = 'sign-in' | 'sign-up' | 'reset'
 
-const inputClass = 'w-full min-h-12 rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong'
+const inputClass = 'w-full min-h-12 rounded-xl border border-border bg-bg px-4 outline-none focus:border-accent-strong'
 
 function friendlyAuthError(error: { message: string; code?: string }): string {
   switch (error.code) {
@@ -128,7 +128,7 @@ export function LoginPage() {
   const disabled = busy || oauthPending !== null
 
   return (
-    <div className="pt-safe pb-safe flex min-h-dvh flex-col items-center justify-center gap-8 px-6 py-10">
+    <div className="pt-safe pb-safe flex min-h-dvh flex-col items-center justify-center gap-10 px-6 py-12">
       <div className="space-y-3 text-center">
         <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-accent text-on-accent shadow-soft">
           <svg
@@ -147,7 +147,7 @@ export function LoginPage() {
         <p className="text-[15px] text-muted">Log what happens, see it over time.</p>
       </div>
 
-      <div className="w-full max-w-xs space-y-5">
+      <div className="w-full max-w-sm space-y-6">
         <div className="grid grid-cols-2 gap-1 rounded-xl bg-surface-2 p-1" role="tablist">
           {(['sign-in', 'sign-up'] as const).map((m) => (
             <button
@@ -156,7 +156,7 @@ export function LoginPage() {
               role="tab"
               aria-selected={mode === m || (m === 'sign-in' && isReset)}
               onClick={() => switchMode(m)}
-              className={`min-h-10 rounded-lg text-[14px] font-medium transition ${
+              className={`min-h-11 rounded-lg text-[14px] font-medium transition ${
                 mode === m || (m === 'sign-in' && isReset) ? 'bg-bg text-fg shadow-soft' : 'text-muted'
               }`}
             >
@@ -165,7 +165,7 @@ export function LoginPage() {
           ))}
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-3" noValidate>
+        <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -205,7 +205,7 @@ export function LoginPage() {
             <button
               type="button"
               onClick={() => switchMode('reset')}
-              className="w-full py-1 text-[14px] text-accent-strong"
+              className="w-full py-2 text-[14px] text-accent-strong"
             >
               Forgot password?
             </button>
@@ -214,7 +214,7 @@ export function LoginPage() {
             <button
               type="button"
               onClick={() => switchMode('sign-in')}
-              className="w-full py-1 text-[14px] text-accent-strong"
+              className="w-full py-2 text-[14px] text-accent-strong"
             >
               Back to sign in
             </button>

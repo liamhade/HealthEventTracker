@@ -40,7 +40,7 @@ export function ListPage() {
         <button
           type="button"
           onClick={() => setOrder(order === 'newest' ? 'oldest' : 'newest')}
-          className="mr-3 flex h-8 shrink-0 items-center gap-1 rounded-full px-2 text-[13px] font-medium text-accent-strong"
+          className="mr-4 flex min-h-9 shrink-0 items-center gap-1 rounded-full px-2 text-[13px] font-medium text-accent-strong"
         >
           <ArrowsIcon width={16} height={16} />
           {order === 'newest' ? 'Newest' : 'Oldest'}
@@ -48,7 +48,7 @@ export function ListPage() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-2xl px-4 pb-8">
+        <div className="mx-auto max-w-2xl px-5 pb-10">
           {isLoading && <CenteredSpinner />}
           <ErrorNote error={error} />
           {!isLoading && !groups.length && (
@@ -63,10 +63,10 @@ export function ListPage() {
           )}
           {groups.map(([day, dayEvents]) => (
             <section key={day}>
-              <h2 className="sticky top-0 z-10 bg-bg/95 py-2 text-[13px] font-semibold tracking-wide text-muted uppercase backdrop-blur">
+              <h2 className="sticky top-0 z-10 bg-bg/95 pt-3 pb-2.5 text-[13px] font-semibold tracking-wide text-muted uppercase backdrop-blur">
                 {formatDayHeading(parseISO(day))}
               </h2>
-              <div className="space-y-2 pb-4">
+              <div className="space-y-3 pb-5">
                 {dayEvents.map((e) => (
                   <EventCard key={e.id} event={e} />
                 ))}
