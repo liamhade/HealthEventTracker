@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme tokens. Light: white + light blue. Dark: black + dark green. */
+:root {
+  --bg: #ffffff;
+  --surface: #f4f9fe;
+  --surface-2: #e7f2fc;
+  --border: #d5e7f6;
+  --fg: #0b1a2a;
+  --muted: #5a6f83;
+  --accent: #a7d8f8;
+  --on-accent: #062a44;
+  --accent-strong: #1479bd;
+  --accent-soft: #eaf5fe;
+  --danger: #c2362b;
+  --shadow: 0 1px 2px rgb(11 26 42 / 0.06), 0 8px 24px rgb(11 26 42 / 0.06);
+}
+
+.dark {
+  --bg: #000000;
+  --surface: #0a0f0b;
+  --surface-2: #111a13;
+  --border: #1d2a20;
+  --fg: #e8f1ea;
+  --muted: #8a9c8f;
+  --accent: #14532d;
+  --on-accent: #d6f5df;
+  --accent-strong: #4cbf78;
+  --accent-soft: #0b2215;
+  --danger: #ff6b5e;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.6), 0 8px 24px rgb(0 0 0 / 0.5);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --shadow-soft: var(--shadow);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+/* iOS zooms into inputs under 16px; keep form controls at 16px. */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+input[type='datetime-local'] {
+  min-height: 2.75rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ---------------------------------------------------------------------------
+   Schedule-X calendar themed with the app tokens
+   --------------------------------------------------------------------------- */
+.app-calendar .sx-react-calendar-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.app-calendar .sx__calendar-wrapper,
+.app-calendar .sx__calendar-wrapper.is-dark {
+  --sx-color-primary: var(--accent-strong);
+  --sx-color-on-primary: var(--bg);
+  --sx-color-primary-container: var(--accent);
+  --sx-color-on-primary-container: var(--on-accent);
+  --sx-color-background: var(--bg);
+  --sx-color-on-background: var(--fg);
+  --sx-color-surface: var(--bg);
+  --sx-color-surface-dim: var(--surface-2);
+  --sx-color-surface-bright: var(--bg);
+  --sx-color-surface-container-low: var(--surface);
+  --sx-color-surface-container: var(--surface);
+  --sx-color-surface-container-high: var(--surface-2);
+  --sx-color-on-surface: var(--fg);
+  --sx-color-outline: var(--muted);
+  --sx-color-outline-variant: var(--border);
+  --sx-color-neutral: var(--muted);
+  --sx-color-neutral-variant: var(--muted);
+  --sx-internal-color-text: var(--fg);
+  --sx-internal-color-light-gray: var(--surface);
+  --sx-border: 1px solid var(--border);
+  font-family: var(--font-sans);
+  border: none;
+  background: var(--bg);
+}
