@@ -13,9 +13,9 @@ export function LogPage() {
 
       <Link
         to="/events/new"
-        className="group relative flex size-52 items-center justify-center rounded-full bg-accent text-on-accent shadow-soft transition active:scale-95"
+        className="group relative flex h-36 w-full max-w-xs items-center justify-center rounded-3xl bg-accent text-on-accent shadow-soft transition active:scale-95"
       >
-        <span className="absolute inset-0 rounded-full bg-accent opacity-40 blur-2xl transition group-active:opacity-60" />
+        <span className="absolute inset-0 rounded-3xl bg-accent opacity-40 blur-2xl transition group-active:opacity-60" />
         <span className="relative text-[34px] font-semibold tracking-tight">Log</span>
       </Link>
 
