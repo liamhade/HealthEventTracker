@@ -25,11 +25,23 @@ npm run dev
 
 The schema lives in [supabase/migrations](supabase/migrations) and has already been applied to project `yndtmgabapwkmpdlzsan`. It creates `events`, `event_images`, `tags`, and `event_tags` with owner-only RLS, plus a private `event-images` storage bucket whose files sit under `<user_id>/<event_id>/`.
 
-You have to do these steps in the Supabase dashboard yourself:
+### Sign-in
 
-1. **Auth → Providers**: enable the OAuth provider(s) you want (e.g. Google) and enter the client ID and secret.
-2. **Auth → URL Configuration**: set the Site URL to your deployed origin, and add `http://localhost:5173` plus your deployed URL to the Redirect URLs.
-3. Set `VITE_AUTH_PROVIDERS` (comma-separated, e.g. `google,apple`) to match the providers you enabled.
+Users sign in with either OAuth (e.g. Google) or a username and password.
+
+- Supabase Auth only knows emails, so a username account signs up with a hidden address, `u-<username>@example.com`. Usernames are unique, enforced by `public.profiles` ([migration](supabase/migrations/20261013000000_profiles_usernames.sql)).
+- In Settings, a username account can add a **recovery email**. It replaces the hidden address, and the user keeps signing in with their username.
+- Username sign-in and "Forgot password?" go through the [`username-auth` Edge Function](supabase/functions/username-auth/index.ts), which maps usernames to emails on the server so emails are never exposed. It is deployed with `verify_jwt = false` because callers aren't signed in yet. Reset links only go to accounts with a recovery email, and the response is the same either way.
+
+### Supabase dashboard settings
+
+You have to change these yourself:
+
+1. **Auth → Providers:** enable the OAuth provider(s) you want and enter their client ID and secret. Set `VITE_AUTH_PROVIDERS` (comma-separated) to match.
+2. **Auth → Sign In / Providers → Email:** turn **off "Confirm email"**, because hidden username addresses can't receive mail. Also turn **off "Secure email change"**, otherwise adding a recovery email also needs confirming from the hidden address.
+3. **Auth → URL Configuration:** set the Site URL to your deployed origin, and add `http://localhost:5173/**` and `https://<your-domain>/**` to the Redirect URLs. Reset links only work for listed URLs.
+4. **Auth → SMTP:** Supabase's built-in email only delivers to your organization's team members and is heavily rate-limited. Configure custom SMTP (e.g. Resend) so other users actually receive password-reset emails.
+5. **Optional:** enable leaked password protection under Auth → Password Security.
 
 ## Images
 

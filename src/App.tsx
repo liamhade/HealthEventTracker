@@ -9,12 +9,13 @@ import { ListPage } from './pages/ListPage'
 import { EventDetailPage } from './pages/EventDetailPage'
 import { EditEventPage, NewEventPage } from './pages/EventFormPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { SetNewPasswordPage } from './pages/SetNewPasswordPage'
 
 // Schedule-X is the heaviest dependency; only load it when the calendar is opened.
 const CalendarPage = lazy(() => import('./pages/CalendarPage').then((m) => ({ default: m.CalendarPage })))
 
 export default function App() {
-  const { session, loading } = useAuth()
+  const { session, loading, recovering } = useAuth()
 
   if (loading) {
     return (
@@ -25,6 +26,7 @@ export default function App() {
   }
 
   if (!session) return <LoginPage />
+  if (recovering) return <SetNewPasswordPage />
 
   return (
     <BrowserRouter>

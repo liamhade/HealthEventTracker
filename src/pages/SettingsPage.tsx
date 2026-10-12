@@ -1,12 +1,21 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
+import type { User } from '@supabase/supabase-js'
 import { useUser } from '../hooks/auth'
+import { isSyntheticEmail } from '../lib/username'
 import { useTheme, type ThemePreference } from '../hooks/theme'
 import { useCreateTag, useDeleteTag, useRenameTag, useTags } from '../hooks/queries'
 import { CheckIcon, PencilIcon, PlusIcon, TrashIcon, XIcon } from '../components/icons'
 import { Button, CenteredSpinner, ErrorNote, ScreenHeader, Spinner } from '../components/ui'
 import type { Tag } from '../lib/api'
+
+function accountLabel(user: User): string {
+  const username = user.user_metadata?.username
+  if (typeof username === 'string' && username) return username
+  if (user.email && !isSyntheticEmail(user.email)) return user.email
+  return user.user_metadata?.full_name ?? 'Signed in'
+}
 
 const themeOptions: { value: ThemePreference; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -51,14 +60,120 @@ export function SettingsPage() {
         <section className="space-y-2">
           <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Account</h2>
           <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-3">
-            <span className="truncate text-[15px]">{user.email ?? user.user_metadata?.full_name ?? 'Signed in'}</span>
+            <span className="truncate text-[15px]">{accountLabel(user)}</span>
             <Button variant="danger" onClick={signOut}>
               Sign out
             </Button>
           </div>
         </section>
+
+        {typeof user.user_metadata?.username === 'string' && <RecoveryEmail user={user} />}
       </div>
     </div>
+  )
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Username accounts can attach a real email so a forgotten password can be reset. */
+function RecoveryEmail({ user }: { user: User }) {
+  const current = user.email && !isSyntheticEmail(user.email) ? user.email : null
+  const pending = user.new_email && user.new_email !== user.email ? user.new_email : null
+  const [editing, setEditing] = useState(false)
+  const [email, setEmail] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<unknown>(null)
+  const [notice, setNotice] = useState<string | null>(null)
+
+  const inputClass =
+    'min-h-11 w-full rounded-xl border border-border bg-bg px-3 outline-none focus:border-accent-strong'
+
+  const save = async () => {
+    setError(null)
+    setNotice(null)
+    const next = email.trim().toLowerCase()
+    if (!EMAIL_PATTERN.test(next)) return setError(new Error('Enter a valid email address.'))
+    if (next !== confirm.trim().toLowerCase()) return setError(new Error("The email addresses don't match."))
+    if (next === current) return setEditing(false)
+
+    setBusy(true)
+    const { data, error } = await supabase.auth.updateUser({ email: next }, { emailRedirectTo: window.location.origin })
+    setBusy(false)
+    if (error) {
+      const taken = error.code === 'email_exists' || error.code === 'user_already_exists'
+      return setError(taken ? new Error('That email already belongs to another account.') : error)
+    }
+    setEditing(false)
+    setEmail('')
+    setConfirm('')
+    setNotice(
+      data.user?.email === next
+        ? 'Recovery email saved.'
+        : `We sent a confirmation link to ${next}. It becomes your recovery email once you open it.`,
+    )
+  }
+
+  return (
+    <section className="space-y-2">
+      <h2 className="text-[13px] font-semibold tracking-wide text-muted uppercase">Recovery email</h2>
+      <div className="space-y-3 rounded-2xl border border-border bg-surface p-3">
+        {!editing ? (
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className={`truncate text-[15px] ${current ? '' : 'text-muted'}`}>{current ?? 'None added'}</p>
+              {pending && <p className="truncate text-[13px] text-muted">Waiting for confirmation: {pending}</p>}
+            </div>
+            <Button variant="ghost" onClick={() => setEditing(true)}>
+              {current ? 'Change' : 'Add'}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              autoComplete="email"
+              autoCapitalize="none"
+              className={inputClass}
+            />
+            <input
+              type="email"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              placeholder="Confirm email address"
+              autoComplete="email"
+              autoCapitalize="none"
+              className={inputClass}
+            />
+            <div className="flex gap-2">
+              <Button onClick={save} disabled={busy} className="flex-1">
+                {busy ? <Spinner /> : 'Save'}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setEditing(false)
+                  setError(null)
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
+        )}
+        <p className="text-[13px] text-muted">
+          {current
+            ? 'Used only to reset your password. You still sign in with your username.'
+            : "Without one, a forgotten password can't be reset. It's only used for password resets."}
+        </p>
+        {notice && <p className="rounded-xl bg-accent-soft px-3 py-2 text-[14px]">{notice}</p>}
+        <ErrorNote error={error} />
+      </div>
+    </section>
   )
 }
 
