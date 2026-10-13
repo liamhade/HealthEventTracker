@@ -18,6 +18,7 @@ import { TagFilter } from '../components/TagFilter'
 import { filterByTags } from '../lib/filters'
 import { ErrorNote } from '../components/ui'
 import { toLocalInputValue } from '../lib/format'
+import { createSwipeNavigationPlugin } from '../lib/calendarSwipe'
 import type { HealthEvent } from '../lib/api'
 
 // Point-in-time events have no duration; give them a sliver of height so they're tappable.
@@ -62,6 +63,12 @@ export function CalendarPage() {
     createScrollControllerPlugin({ initialScroll: format(subHours(new Date(), 1), 'HH:00') }),
   )
 
+  const [swipeNavigation] = useState(createSwipeNavigationPlugin)
+  const calendarWrapperRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (calendarWrapperRef.current) return swipeNavigation.attach(calendarWrapperRef.current)
+  }, [swipeNavigation])
+
   const calendar = useCalendarApp({
     views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
     defaultView: window.innerWidth < 700 ? 'day' : 'week',
@@ -82,7 +89,7 @@ export function CalendarPage() {
         darkColors: { main: '#4cbf78', container: '#111a13', onContainer: '#e8f1ea' },
       },
     },
-    plugins: [scrollController],
+    plugins: [scrollController, swipeNavigation],
     callbacks: {
       onEventClick: (event) => navigateRef.current(`/events/${event.id}`),
       onClickDateTime: (dateTime) => {
@@ -110,7 +117,7 @@ export function CalendarPage() {
           </div>
         )}
       </div>
-      <div className="app-calendar mx-auto min-h-0 w-full max-w-5xl flex-1 overflow-hidden">
+      <div ref={calendarWrapperRef} className="app-calendar mx-auto min-h-0 w-full max-w-5xl flex-1 overflow-hidden">
         <ScheduleXCalendar calendarApp={calendar} />
       </div>
     </div>
